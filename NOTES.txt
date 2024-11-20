@@ -44,3 +44,92 @@ The clsx library provides a convenient way to handle conditional class names bas
 This information from the sources should give you a good foundation for understanding the different CSS styling options available in Next.js.
 
 ----------------------------------------------------------------------------------------------
+
+#? Optimizing Fonts and Images
+
+The sources provide a detailed explanation of how to optimize fonts and images in a Next.js application. Let's break down the key concepts and steps:
+
+a) Font Optimization
+Why Optimize Fonts?
+
+Performance Impact: Custom fonts can significantly affect a website's loading speed because font files need to be fetched from a server. 
+Cumulative Layout Shift (CLS): When a browser renders text using a fallback font and then switches to the custom font after it loads, the text's size and layout can change. This shift in layout is called CLS, and it negatively impacts user experience. 
+Next.js Font Optimization Features 
+
+Build-Time Font Download: Next.js optimizes fonts by downloading them during the build process and hosting them with the application's static assets.
+Reduced Network Requests: This approach eliminates the need for additional network requests to fetch fonts when a user visits your site, leading to faster loading times.
+Adding a Custom Font 
+
+Create a fonts.ts File: Create a file named fonts.ts within the /app/ui folder to store your application's fonts. This helps centralize font management.
+Import the Inter Font: Using the next/font/google module, import the Inter font. Specify the desired subset (e.g., 'latin') to control which characters are loaded.
+// /app/ui/fonts.ts
+"import { Inter } from 'next/font/google';
+export const inter = Inter({ subsets:  });
+"
+Apply the Font to the <body>: In your root layout component (/app/layout.tsx), add the inter.className to the <body> tag to apply the font globally. You can also include additional classes, like Tailwind's antialiased class for smoother font rendering.
+// /app/layout.tsx
+"
+import '@/app/ui/global.css';
+import { inter } from '@/app/ui/fonts';
+
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en">
+            <body className={`${inter.className} antialiased`}>{children}</body>
+        </html>
+    );
+}
+"
+Verification: To confirm that the font is applied, use your browser's developer tools to inspect the <body> element. You should see Inter and Inter_Fallback listed under the styles. 
+Adding a Secondary Font 
+
+Import Lusitana Font: In the fonts.ts file, import the secondary font, Lusitana, from next/font/google. Make sure to specify the subset and font weight (refer to the Google Fonts website or TypeScript errors for available options).
+Apply to Specific Element(s): Apply the lusitana.className to the desired elements in your application (e.g., the <p> element in app/page.tsx).
+Additional Tips 
+
+Consult the Google Fonts website to explore font options and available weights.
+Refer to the Next.js documentation for details on adding multiple fonts and advanced configuration.
+
+
+b) Image Optimization
+Why Optimize Images? 
+
+Images are often the largest assets on a website. 
+Unoptimized images lead to slow loading times and a poor user experience. 
+Challenges with Traditional Image Handling 
+
+Responsiveness: Ensuring images adapt to various screen sizes can be complex.
+Size Management: Specifying different image sizes for different devices is often manual.
+Layout Shift: Images loading at different times can cause disruptive layout shifts.
+Lazy Loading: Implementing lazy loading to improve initial page load times requires extra effort.
+Next.js Image Optimization with the <Image> Component 
+
+The next/image component extends the standard HTML <img> tag, providing automatic image optimization features:
+
+Layout Shift Prevention: The component reserves space for images, preventing layout shifts as they load. 
+Automatic Resizing: Images are resized to fit different viewports, reducing the need to deliver large images to devices with smaller screens. 
+Built-in Lazy Loading: Images are lazy-loaded by default, meaning they load only when they enter the user's viewport. This optimizes initial page load time. 
+Modern Format Support: The component serves images in modern formats like WebP and AVIF when supported by the browser, improving image quality and compression. 
+
+Adding an Image 
+Import the <Image> component: Import the Image component from next/image into the file where you want to use it.
+Use the Component: Add the <Image> component, providing the src, width, height, and alt attributes. Ensure the width and height attributes match the aspect ratio of the source image to prevent layout shift.
+// /app/page.tsx
+import Image from 'next/image';
+
+// ...
+<Image
+    src="/hero-desktop.png"
+    width={1000}
+    height={760}
+    className="hidden md:block"
+    alt="Screenshots of the dashboard project showing desktop version"
+/>
+Handling Different Images for Mobile and Desktop 
+
+Provide Separate Images: Place different images for desktop and mobile in the /public folder (e.g., hero-desktop.png and hero-mobile.png).
+Conditional Rendering: Use CSS classes like hidden and md:block to control the display of images based on screen size. For example, hidden md:block would hide the image on mobile and show it on desktop.
