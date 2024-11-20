@@ -133,3 +133,40 @@ Handling Different Images for Mobile and Desktop
 
 Provide Separate Images: Place different images for desktop and mobile in the /public folder (e.g., hero-desktop.png and hero-mobile.png).
 Conditional Rendering: Use CSS classes like hidden and md:block to control the display of images based on screen size. For example, hidden md:block would hide the image on mobile and show it on desktop.
+
+----------------------------------------------------------------------------------------------
+
+#? Creating Layouts and Pages
+
+Creating Layouts and Pages in Next.js
+This section of the documentation explains how to use Next.js features to structure your application with multiple routes and layouts for a better user experience. Here is a breakdown of the key concepts.
+
+File-System Routing
+Next.js uses a file-system based routing system, where folders represent route segments. Each folder within the /app directory maps to a corresponding URL segment in your application. For example:
+
+The /app/dashboard folder corresponds to the /dashboard route.
+A file named page.tsx within the /app/dashboard folder would be the page accessible at the /dashboard URL.
+The page.tsx File
+The page.tsx file is a special Next.js file that defines the content of a page. It exports a React component which is rendered when a user visits the corresponding route. Every route must have a page.tsx file to be accessible. Your application's home page is defined in the /app/page.tsx file, which is associated with the root route (/).
+
+Creating Nested Routes
+To create a nested route in your application, you simply create a new folder within an existing route folder and add a page.tsx file inside the new folder. For example, to create a page accessible at /dashboard/customers, you would:
+
+Create a folder named customers inside the /app/dashboard folder.
+Create a file named page.tsx within the /app/customers folder and define the content for the customers page.
+Colocation
+Next.js promotes the concept of "colocation," which means keeping related files together. You can place components, test files, and other code related to a specific route within the same folder as the page.tsx file. However, only the code within page.tsx is publicly accessible. This helps to organize your project and make it easier to maintain.
+
+Layouts
+Layouts allow you to create shared UI elements that are common across multiple pages. Next.js uses a special file named layout.tsx for defining layouts. A layout.tsx file exports a React component that receives a children prop. The content of the page.tsx file for the corresponding route is rendered as the children within the layout.
+
+Nested Layouts
+Layouts can be nested to create a hierarchy of shared UI components. For example, you can create a layout specific to your dashboard pages at /app/dashboard/layout.tsx that wraps the content of all pages within the /dashboard route. This allows you to have a consistent navigation or sidebar across all dashboard pages.
+
+Partial Rendering
+When navigating between pages that share a common layout, Next.js only updates the content within the page.tsx file while the layout component remains unchanged. This optimization, called partial rendering, improves performance by avoiding unnecessary re-renders of the entire page.
+
+Root Layout
+The root layout, located at /app/layout.tsx, is a special layout that wraps all pages in your application. It's primarily used for applying global styles and settings, like importing fonts or defining metadata. The root layout is required in every Next.js application.
+
+----------------------------------------------------------------------------------------------
