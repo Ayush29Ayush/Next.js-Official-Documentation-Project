@@ -186,3 +186,42 @@ Prefetching: When a <Link> component appears in the viewport, Next.js prefetches
 Active Link Styling: A common UI pattern is to highlight the currently active link in the navigation menu.
 usePathname() hook: You can use the usePathname() hook from next/navigation to get the user's current path from the URL. Since this is a hook, the component where you use it must be a Client Component. You indicate a component is a Client Component by adding "use client" to the top of the file.
 Conditional Styling: By comparing the value returned by usePathname() to the href attribute of your <Link> components, you can apply CSS classes to style the active link. This helps users easily understand their current location within the application.
+
+#? Chapter 6: Setting Up Your Database
+
+This section of the sources provides a step-by-step guide on setting up a PostgreSQL database for your Next.js application using Vercel's marketplace integrations. It assumes you are using GitHub for your repository, but alternatives like GitLab or Bitbucket are also compatible. The instructions walk through pushing your project to GitHub, creating a Vercel account, deploying your project, and setting up and seeding your database.
+
+Connecting your Project to GitHub and Vercel
+1. Push Your Code to a GitHub Repository: If you haven't already, start by pushing your Next.js project to a GitHub repository. This step is essential for seamless integration with Vercel's deployment and database provisioning tools. 
+
+2. Sign Up for Vercel and Link Your GitHub Account: Create a free "hobby" plan account on Vercel by visiting vercel.com/signup. To connect your GitHub and Vercel accounts, select the "Continue with GitHub" option. 
+
+3. Import and Deploy Your Project: After connecting your accounts, Vercel will prompt you to import the GitHub repository you created. Choose a name for your project and click "Deploy" to initiate the deployment process. This action creates a live version of your application hosted on Vercel's platform. 
+
+Automatic Redeployment on GitHub Push: Connecting your GitHub repository to Vercel enables automatic redeployment whenever you push changes to the main branch. Additionally, creating pull requests will generate instant previews, allowing you to catch deployment errors early and share a preview of your project with your team for feedback. 
+
+Creating and Seeding your PostgreSQL Database
+1. Create a PostgreSQL Database: Go to the "Storage" tab in your Vercel project dashboard and click "Create Database." You'll have options to choose from Postgres (Powered by Neon), Neon, or Supabase. Select your preferred provider and proceed by clicking "Continue." 
+
+2. Connect to the Database and Configure Environment Variables: Accept the terms of service, choose your desired region (Washington D.C. (iad1) is recommended for lower latency), and select a plan if needed. After successfully connecting, go to the .env.local tab within your Vercel dashboard, click "Show secret" to reveal your database credentials, and then click "Copy Snippet." In your code editor, locate the .env.example file and rename it to .env. Paste the copied content from Vercel into this file. 
+
+Protect your Secrets: To prevent your database credentials from being exposed when pushing to GitHub, add the .env file to your .gitignore file. 
+
+3. Install the Vercel Postgres SDK: Execute the command "pnpm i @vercel/postgres" in your terminal to install the Vercel Postgres SDK. This SDK simplifies database interactions within your Next.js application. 
+
+4. Seed Your Database with Initial Data: Within the /app folder of your project, you'll find a /seed folder that contains a Next.js Route Handler (route.ts). Uncomment this file. This handler acts as a server-side endpoint designed to populate your database. It uses SQL to create the necessary tables and draws data from the placeholder-data.ts file to fill them. 
+
+5. Run the Seed Script: Ensure that your local development server is running (using pnpm run dev) and then visit localhost:3000/seed in your web browser. You should see a message confirming "Database seeded successfully." Once seeding is complete, you can safely delete the seed file. 
+
+Additional Information about the Database
+The sources mention that the seeding script uses the bcrypt library to hash user passwords for security purposes. If you encounter compatibility issues with bcrypt in your development environment, you can modify the script to use bcryptjs instead. 
+
+Troubleshooting Database Seeding: The sources offer some troubleshooting tips for common database seeding issues. If you need to rerun the seeding script and there are existing tables, you can remove them using the DROP TABLE tablename command in your database query interface. However, exercise caution as this command will delete the specified table and all its associated data. While this is acceptable in a development environment with placeholder data, avoid using it in production applications. 
+
+Executing Queries to Test the Setup: To verify that everything is functioning correctly, you can execute queries using another Router Handler located at /query/route.ts. This file contains a listInvoices() function with a sample SQL query. Uncomment this file and visit localhost:3000/query in your browser. The page should display the results of the query, returning an invoice amount and name. 
+
+Conclusion
+By following these steps, you'll have a PostgreSQL database set up and integrated into your Next.js project, ready for you to continue building your application.
+
+
+-------------------------------------------------------------------------------------------------------------------------------
