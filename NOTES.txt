@@ -1,6 +1,6 @@
 Official Next.js Documentation Project
 
-#? Getting Started
+#? Chapter 1: Getting Started
 
 #! Summary of the Folder Structure for a Next.js App
 The sources describe a Next.js application that has the following folder structure:
@@ -17,9 +17,9 @@ In addition to the main folder structure, the sources provide some insights into
 
 ----------------------------------------------------------------------------------------------
 
-#? CSS Styling
+#? Chapter 2: CSS Styling
 
-Summary of CSS Styling Options in Next.js
+#! Summary of CSS Styling Options in Next.js
 The sources explain that there are several ways to style a Next.js application. Here's a summary of the essential details from the sources:
 
 Global Styles: You can use a global CSS file to apply styles across your entire application. In the example provided, a global.css file is located in the /app/ui folder, and it's imported into the root layout component (/app/layout.tsx). This allows you to set site-wide styles for elements like links, apply CSS resets, and define other common styles. 
@@ -45,9 +45,10 @@ This information from the sources should give you a good foundation for understa
 
 ----------------------------------------------------------------------------------------------
 
-#? Optimizing Fonts and Images
+#? Chapter 3: Optimizing Fonts and Images
 
-The sources provide a detailed explanation of how to optimize fonts and images in a Next.js application. Let's break down the key concepts and steps:
+#! The sources provide a detailed explanation of how to optimize fonts and images in a Next.js application. 
+Let's break down the key concepts and steps:
 
 a) Font Optimization
 Why Optimize Fonts?
@@ -136,7 +137,7 @@ Conditional Rendering: Use CSS classes like hidden and md:block to control the d
 
 ----------------------------------------------------------------------------------------------
 
-#? Creating Layouts and Pages
+#? Chapter 4: Creating Layouts and Pages
 
 Creating Layouts and Pages in Next.js
 This section of the documentation explains how to use Next.js features to structure your application with multiple routes and layouts for a better user experience. Here is a breakdown of the key concepts.
@@ -170,3 +171,18 @@ Root Layout
 The root layout, located at /app/layout.tsx, is a special layout that wraps all pages in your application. It's primarily used for applying global styles and settings, like importing fonts or defining metadata. The root layout is required in every Next.js application.
 
 ----------------------------------------------------------------------------------------------
+
+#? Chapter 5: Navigating Between Pages
+
+Next.js Navigation Optimization
+This section of the documentation explains how Next.js optimizes navigation between pages in an application to provide a smooth user experience that feels more like a web app than a traditional website.
+
+Traditional Navigation Drawbacks: Using standard <a> HTML elements for navigation causes a full page refresh every time a user clicks a link. This leads to a less responsive experience and can feel jarring to the user.
+The Link Component: Next.js provides a <Link /> component that enables client-side navigation with JavaScript, eliminating the full page refresh issue. The syntax is similar to using an <a> tag, simply replacing <a href="..."> with <Link href="...">. 
+
+Automatic Code Splitting and Prefetching: Next.js enhances performance by automatically splitting your application's code into smaller chunks based on route segments. Unlike traditional single-page applications (SPAs) where the entire application code is loaded upfront, Next.js only loads the code needed for the current route. This results in faster initial page loads and better resource management. 
+Route Isolation: Code splitting isolates pages, so an error on one page won't affect the functionality of other parts of the application.
+Prefetching: When a <Link> component appears in the viewport, Next.js prefetches the code for the linked route in the background. This means that when a user clicks the link, the page transition is almost instantaneous because the code is already loaded.
+Active Link Styling: A common UI pattern is to highlight the currently active link in the navigation menu.
+usePathname() hook: You can use the usePathname() hook from next/navigation to get the user's current path from the URL. Since this is a hook, the component where you use it must be a Client Component. You indicate a component is a Client Component by adding "use client" to the top of the file.
+Conditional Styling: By comparing the value returned by usePathname() to the href attribute of your <Link> components, you can apply CSS classes to style the active link. This helps users easily understand their current location within the application.
