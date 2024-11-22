@@ -345,3 +345,55 @@ Whole page streaming: Offers simplicity but can be slow if a component has a slo
 Individual component streaming: Allows for fine-grained control but may result in a jarring "popping" effect. 
 Page section streaming: Provides a balanced approach by streaming groups of related components. 
 The best strategy depends on the specific application. 
+
+---------------------------------------------------------------------------------------------
+
+#? Chapter 10: Partial Prerendering
+
+Refer => https://nextjs.org/learn/dashboard-app/partial-prerendering
+
+---------------------------------------------------------------------------------------------
+
+#? Chapter 11: Adding Search and Pagination
+
+This section of the Learn Next.js tutorial explains how to implement search and pagination functionalities in a Next.js application using URL search parameters. It emphasizes the benefits of utilizing URL search parameters over client-side state management and provides step-by-step instructions for integrating these features.
+
+Advantages of Using URL Search Params
+The tutorial advocates for using URL search params for managing search and pagination states because of several key benefits :
+
+Bookmarkable and Shareable URLs: Users can bookmark or share URLs that retain their search queries and filters .
+Server-Side Rendering and Initial Load: The server can directly use URL parameters to pre-render the initial state of the page, improving SEO and perceived performance .
+Analytics and Tracking: Search queries and filters in the URL streamline user behavior tracking without requiring complex client-side logic .
+Adding Search Functionality
+The tutorial outlines the following steps for adding search functionality:
+
+Capture User Input: Implement an input field in a Client Component (e.g., <Search>) and use the onChange event listener to capture user input .
+Update the URL with Search Params:Use the useSearchParams hook from 'next/navigation' to access current URL parameters .
+Create a new URLSearchParams instance to manipulate the query parameters .
+Use the set method to add the search term to the parameters or delete to remove it if the input is empty .
+Utilize the useRouter and usePathname hooks to update the URL using the replace method, which modifies the URL without a full page reload .
+Keep URL and Input Field Synced: Utilize the defaultValue attribute of the input field to populate it with the search query from the URL, ensuring consistency .
+The tutorial explains the distinction between defaultValue and value, highlighting that defaultValue is suitable when not using state management for the input value, as the native input manages its state .
+Update the Table Component: Pass the updated searchParams to the Server Component responsible for displaying data (e.g., <Table>) so it can fetch and render the filtered results .
+The tutorial differentiates between using the useSearchParams hook in Client Components and accessing searchParams via props in Server Components .
+Optimizing Search with Debouncing
+The tutorial highlights the potential performance issue of triggering a server request with every keystroke and introduces debouncing as a solution :
+
+Debouncing: A technique that limits the rate at which a function executes, in this case, preventing excessive database queries with each keystroke .
+Implementation: The tutorial suggests using the "use-debounce" library and provides code examples for incorporating it into the search functionality .
+Adding Pagination
+The tutorial then explains how to implement pagination using URL search parameters, following a similar approach to the search implementation :
+
+Fetch Total Pages: A server-side function, fetchInvoicesPages, calculates the total number of pages based on the search query and the number of items displayed per page .
+Pass Total Pages to Pagination Component: The calculated totalPages value is passed as a prop to the <Pagination> Client Component .
+Implement Pagination Logic: The <Pagination> component utilizes usePathname and useSearchParams hooks to manage the current page and generate URLs for different pages .
+Reset Page on New Search: Modify the handleSearch function to set the page number back to 1 whenever a new search query is entered, ensuring users start from the first page of the new results .
+Summary
+The tutorial concludes by summarizing the key concepts covered:
+
+Managing search and pagination with URL search parameters instead of client-side state .
+Fetching data on the server to avoid exposing sensitive information .
+Leveraging the useRouter hook for client-side transitions without full page reloads .
+By implementing these techniques, you can create a more efficient and user-friendly application with seamless search and pagination features.
+
+-----------------------------------------------------------------------------------------------
