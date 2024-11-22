@@ -397,3 +397,131 @@ Leveraging the useRouter hook for client-side transitions without full page relo
 By implementing these techniques, you can create a more efficient and user-friendly application with seamless search and pagination features.
 
 -----------------------------------------------------------------------------------------------
+
+#? Chapter 12: Mutating Data
+
+This section of the Learn Next.js tutorial focuses on Server Actions, a powerful feature in Next.js for handling data mutations, such as creating, updating, and deleting data. The tutorial explains how Server Actions streamline data manipulation, enhances security, and integrates seamlessly with Next.js caching mechanisms.
+
+What are Server Actions? 
+Server Actions are asynchronous functions that run directly on the server, eliminating the need for separate API endpoints for data mutations. 
+They can be invoked from both Client and Server Components. 
+They offer significant security advantages by protecting against various web application threats through: 
+POST requests
+Encrypted closures
+Strict input checks
+Error message hashing
+Host restrictions
+Using Forms with Server Actions 
+Server Actions can be invoked from forms by utilizing the action attribute of the <form> element. 
+The action automatically receives the native FormData object, which contains the submitted data. 
+Example: 
+// Server Component
+
+export default function Page() {
+
+  // Action
+
+  async function create(formData: FormData) {
+
+    'use server';
+
+    // Logic to mutate data...
+
+  }
+
+  // Invoke the action using the "action" attribute
+
+  return <form action={create}>...</form>;
+
+}
+
+Invoking a Server Action within a Server Component allows for progressive enhancement, enabling forms to function even if JavaScript is disabled on the client. 
+Server Actions and Next.js Caching 
+Server Actions integrate deeply with Next.js caching mechanisms. 
+When a form is submitted through a Server Action, the action can mutate data and revalidate the associated cache using APIs like revalidatePath and revalidateTag. 
+Creating an Invoice: A Step-by-Step Guide 
+The tutorial provides a practical example of creating an invoice to demonstrate the usage of Server Actions, outlining the following steps: 
+
+Create a form to capture user input. 
+Create a Server Action and invoke it from the form. 
+Inside the Server Action, extract data from the formData object. 
+Validate and prepare the data for database insertion. 
+Insert the data into the database and handle any errors. 
+Revalidate the cache and redirect the user to the invoices page. 
+1. Creating the Route and Form 
+Create a new route segment /create with a page.tsx file within the /invoices folder. 
+The provided code snippet demonstrates a Server Component that fetches customer data and passes it to a <Form> component. 
+The <Form> component: 
+Includes a dropdown (<select>) for selecting customers. 
+Uses input fields (<input>) for entering the amount and status. 
+Has a submit button (<button type="submit">). 
+2. Creating the Server Action 
+Create a new file named actions.ts in the lib directory. 
+Add the 'use server' directive to the top of the file to mark all exported functions as Server Actions. 
+Create an asynchronous function createInvoice that accepts formData as a parameter. 
+Import the createInvoice function into the <Form> component and call it using the action attribute of the form element. 
+Important Note: 
+
+In HTML, the action attribute typically specifies a URL for submitting form data. 
+In React, the action attribute is a special prop for invoking actions. 
+Server Actions automatically create a POST API endpoint behind the scenes. 
+3. Extracting Data from formData 
+Inside the actions.ts file, extract the values from formData using methods like .get(name) or entries(). 
+Example using .get(name): 
+const rawFormData = {
+
+  customerId: formData.get('customerId'),
+
+  amount: formData.get('amount'),
+
+  status: formData.get('status'),
+
+};
+
+Using entries() and Object.fromEntries(): 
+const rawFormData = Object.fromEntries(formData.entries());
+
+4. Validating and Preparing the Data 
+Type validation and coercion: 
+Validate the data types from the form to match the database expectations. 
+Use a type validation library like Zod to simplify validation and coercion. 
+Define a Zod schema that matches the form object structure. 
+Use z.coerce.number() to convert string values to numbers, ensuring type correctness. 
+Storing values in cents: 
+Convert monetary values to cents before storing in the database to prevent floating-point errors. 
+Multiply the amount by 100 to get the value in cents. 
+Creating new dates: 
+Create a new date in the format "YYYY-MM-DD" for the invoice creation date. 
+5. Inserting Data into the Database 
+Construct an SQL query to insert the validated and prepared data into the database using the sql tag from @vercel/postgres. 
+6. Revalidating and Redirecting 
+Use revalidatePath from next/cache to clear the Next.js Client-side Router Cache and trigger a fresh data fetch for the specified path (e.g., /dashboard/invoices). 
+Utilize redirect from next/navigation to redirect the user to the desired page after the database update. 
+Updating an Invoice 
+The tutorial then explains how to update an existing invoice, involving these steps: 
+
+Create a dynamic route segment with the invoice ID. 
+Read the invoice ID from the page parameters. 
+Fetch the specific invoice from the database. 
+Pre-populate the form with the fetched invoice data. 
+Update the invoice data in the database. 
+1. Creating a Dynamic Route Segment 
+Create a dynamic route segment named 
+Create a new route called edit with a page.tsx file within the 
+2. Reading the Invoice ID 
+Access the id parameter using the params prop in the page component. 
+3. Fetching the Specific Invoice 
+Use fetchInvoiceById function to fetch the invoice data based on the ID. 
+4. Passing the ID to the Server Action 
+Pass the id to the updateInvoice Server Action using bind. 
+Avoid passing the id directly as an argument, as it may not be encoded properly. 
+Using bind ensures that all values passed to the Server Action are encoded. 
+Alternatively, you can use a hidden input field to pass the id, but be mindful of potential security concerns with sensitive data in the HTML source. 
+Deleting an Invoice 
+Wrap the delete button within a <form> element. 
+Use bind to pass the id to the deleteInvoice Server Action. 
+Create the deleteInvoice Server Action in actions.ts. 
+Call revalidatePath to refresh the invoices page after deletion. 
+This section of the Next.js tutorial offers a comprehensive guide to utilizing Server Actions for efficient and secure data mutations in Next.js applications. Remember to refer to the original sources for specific code examples and implementation details.
+
+-----------------------------------------------------------------------------------------------
