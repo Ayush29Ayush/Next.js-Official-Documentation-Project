@@ -553,7 +553,9 @@ The notFound function takes precedence over error.tsx for specific error handlin
 
 #? Chapter 14: Improving Accessibility
 
-* Adding Accessibility to Your Next.js Application, refer documentation
+* Adding Accessibility to Your Next.js Application, refer documentation 
+* Add "lint": "next lint" to package.json
+* Type "pnpm lint" in terminal 
 
 -----------------------------------------------------------------------------------------------
 
@@ -645,5 +647,80 @@ This section focuses on incorporating authentication into your Next.js applicati
     *   Password: `123456`
 
 This information from the sources provides a step-by-step guide for adding authentication to a Next.js application using NextAuth.js, covering key concepts from setup to testing.
+
+-----------------------------------------------------------------------------------------------
+
+#? Chapter 16: Adding Metadata
+
+This section of the documentation explains how to add metadata to your Next.js application.
+
+### What is Metadata?
+
+*   Metadata provides additional information about a webpage that is not visible to users but is used by search engines and social media platforms.
+*   Metadata is typically embedded in the HTML `<head>` element.
+*   It's crucial for SEO (Search Engine Optimization) because it helps search engines understand the content of the webpage and index it properly.
+*   Metadata also improves the way webpages are displayed when shared on social media.
+
+### Types of Metadata
+
+The sources list several types of metadata and their purposes:
+
+*   **Title Metadata**: The title of the webpage, displayed in browser tabs and search engine results.
+    *   Example: `<title>Page Title</title>`
+*   **Description Metadata**: A brief summary of the webpage content, often shown in search results.
+    *   Example: `<meta name="description" content="A brief description of the page content." />`
+*   **Keyword Metadata**: Keywords related to the webpage's content, used by search engines for indexing.
+    *   Example: `<meta name="keywords" content="keyword1, keyword2, keyword3" />`
+*   **Open Graph Metadata**: Enhances how a webpage appears when shared on social media, including title, description, and preview image.
+    *   Example: 
+        ```html
+        <meta property="og:title" content="Title Here" />
+        <meta property="og:description" content="Description Here" />
+        <meta property="og:image" content="image_url_here" /> 
+        ```
+*   **Favicon Metadata**: Links a small icon (favicon) to the webpage, displayed in the browser's address bar or tab.
+    *   Example: `<link rel="icon" href="path/to/favicon.ico" />`
+
+### Adding Metadata in Next.js
+
+Next.js provides two ways to add metadata:
+
+1.  **Config-Based**: Export a static `metadata` object or a dynamic `generateMetadata` function in a `layout.js` or `page.js` file.
+2.  **File-Based**: Utilize special files in your Next.js project for specific metadata:
+    *   `favicon.ico`, `apple-icon.jpg`, and `icon.jpg` for favicons.
+    *   `opengraph-image.jpg` and `twitter-image.jpg` for social media images.
+    *   `robots.txt` for search engine crawling instructions.
+    *   `sitemap.xml` for information about the website's structure.
+
+Next.js automatically generates the necessary HTML `<head>` elements based on your configurations.
+
+### Favicon and Open Graph Image
+
+*   Place `favicon.ico` and `opengraph-image.jpg` in the root of your `/app` folder, and Next.js will use them automatically.
+*   You can verify this by inspecting the `<head>` element of your application in your browser's developer tools.
+*   The sources note that you can also create dynamic Open Graph images using the `ImageResponse` constructor.
+
+### Page Titles and Descriptions
+
+*   You can add a `metadata` object to any `layout.js` or `page.js` file to include information like the page title and description.
+*   Metadata in `layout.js` is inherited by all pages that use that layout.
+*   Metadata in nested pages overrides metadata in the parent layout.
+*   **Use `title.template` to create a consistent title structure:**
+    *   Define a template in the root layout's `metadata` object with `%s` as a placeholder for the specific page title.
+    *   Example: `title: { template: '%s | Acme Dashboard', default: 'Acme Dashboard' }`
+    *   In individual pages, set the `title` in the `metadata` object to the specific page title.
+    *   The `%s` will be replaced with the page title, ensuring consistency across all pages.
+
+### Practice
+
+The sources encourage you to practice adding titles to other pages in your application.
+
+### Key Takeaways
+
+*   The Next.js Metadata API is powerful and flexible, giving you control over your application's metadata.
+*   You can add various metadata fields, including `keywords`, `robots`, `canonical`, and more.
+*   Refer to the Next.js documentation for more in-depth information and examples. 
+
+This summary, combined with the detailed explanations and examples from the sources, provides a solid foundation for understanding and implementing metadata in your Next.js application. Remember that the sources emphasize the importance of metadata for SEO and social media sharing. 
 
 -----------------------------------------------------------------------------------------------
