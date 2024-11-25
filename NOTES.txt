@@ -551,8 +551,99 @@ The notFound function takes precedence over error.tsx for specific error handlin
 
 -----------------------------------------------------------------------------------------------
 
-#? Chapter 14: Improving Asccessibility
+#? Chapter 14: Improving Accessibility
 
 * Adding Accessibility to Your Next.js Application, refer documentation
 
-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+#? Chapter 15: Adding Authentication
+
+This section focuses on incorporating authentication into your Next.js application, specifically highlighting the use of NextAuth.js and its associated concepts.
+
+### Authentication Explained
+
+*   **Authentication** is the process of verifying a user's identity. It's crucial for ensuring the security of web applications.
+*   Many websites use multi-factor authentication (2FA), which requires additional verification beyond just a username and password. This enhances security by requiring a unique token from the user's device or an external app.
+
+### Authentication vs. Authorization
+
+*   It's important to distinguish between authentication and authorization:
+    *   **Authentication:** Verifies the user's identity (e.g., using a username and password).
+    *   **Authorization:** Determines what the authenticated user is allowed to access or do within the application.
+
+### Incorporating Authentication Using NextAuth.js
+
+*   This section demonstrates how to add authentication to a Next.js dashboard using NextAuth.js, a library that simplifies authentication management.
+*   The process begins with creating a login route (`/login`) and a corresponding `LoginForm` component.
+*   **NextAuth.js is the chosen tool for adding authentication.** It handles the complexities of sessions, sign-in, sign-out, and other authentication aspects, making the process more efficient and less error-prone.
+
+### Setting up NextAuth.js
+
+1.  **Install NextAuth.js (beta version):**
+    ```bash
+    pnpm i next-auth@beta
+    ```
+    (This version is compatible with Next.js 14).
+2.  **Generate a secret key for encryption (for secure user sessions):**
+    ```bash
+    openssl rand -base64 32
+    ```
+    This key should be added to an `.env` file as the `AUTH_SECRET` variable.
+3.  **Add the secret key to the `.env` file:**
+    ```
+    AUTH_SECRET=your-secret-key 
+    ```
+    Remember to update environment variables in your Vercel project for production deployments.
+4.  **Create an `auth.config.ts` file:** This file will contain the configuration for NextAuth.js, including the `pages` option, which specifies routes for custom pages like sign-in.
+    *   Add the following code to `auth.config.ts` to redirect users to the custom login page:
+        ```typescript
+        import type { NextAuthConfig } from 'next-auth';
+
+        export const authConfig = {
+          pages: {
+            signIn: '/login',
+          },
+        } satisfies NextAuthConfig;
+        ```
+       
+
+### Protecting Routes with Middleware
+
+*   **Next.js Middleware is used to protect routes, ensuring that only logged-in users can access certain pages.** This enhances security by preventing unauthorized access and improves performance by blocking rendering of protected content until authentication is verified.
+*   **The `authorized` callback:** This function within Next.js Middleware checks if the user is authorized to access a page. It receives the user's session and the incoming request and determines whether access should be granted or the user should be redirected to the login page.
+*   **The `providers` option in `authConfig`:** This is an array used to list different login options (e.g., Google, GitHub). For this tutorial, only the Credentials provider is used.
+*   **Creating `middleware.ts`:** This file initializes NextAuth.js using the configuration from `auth.config.ts` and exports the `auth` property. It also defines which paths the Middleware should run on using the `matcher` option.
+*   **Password Hashing:**  It's crucial to **hash passwords** before storing them in the database for security purposes. Hashing transforms a password into a fixed-length, seemingly random string, protecting the password even if data is compromised.
+    *   The `bcrypt` package is used for hashing in this tutorial. Due to its reliance on Node.js APIs that are not available in Next.js Middleware, it needs to be separated into an `auth.ts` file.
+    *   The `auth.ts` file spreads the `authConfig` object and exports necessary functions like `auth`, `signIn`, and `signOut`.
+
+### Using the Credentials Provider
+
+*   The **Credentials provider** enables users to log in using a username and password.
+*   It's added to the `providers` array in `auth.ts`.
+
+    ***Note:** While the tutorial focuses on the Credentials provider for simplicity, using alternative providers like OAuth or email-based logins is generally recommended for better security.*
+
+### Implementing Sign-In Functionality
+
+1.  **The `authorize` function:** This function in `auth.ts` handles the authentication logic. It uses `zod` for validating email and password inputs before querying the user from the database.
+2.  **The `getUser` function:** This function queries the database to find the user associated with the given email address.
+3.  **Password comparison:** The `bcrypt.compare` function is used to securely compare the entered password with the hashed password stored in the database. If the passwords match, the user is authenticated; otherwise, login is denied.
+
+### Updating the Login Form and Adding Logout
+
+*   **`authenticate` action:** Create a new Server Action called `authenticate` within `actions.ts` that uses the `signIn` function from `auth.ts`.
+*   **Error handling:** Incorporate error handling within the `authenticate` action to provide appropriate feedback to the user. This involves using the `AuthError` from `next-auth` to handle different authentication error types.
+*   **Login form integration:** In the `login-form.tsx` component, integrate the `authenticate` action using `useActionState`. This hook helps handle form submissions, display pending states, and manage error messages.
+*   **Logout functionality:** To enable users to log out, call the `signOut` function from `auth.ts` within the `SideNav` component's form.
+
+### Testing
+
+*   Test the implemented authentication by logging in and out of the application using the provided credentials:
+    *   Email: `user@nextmail.com`
+    *   Password: `123456`
+
+This information from the sources provides a step-by-step guide for adding authentication to a Next.js application using NextAuth.js, covering key concepts from setup to testing.
+
+-----------------------------------------------------------------------------------------------
