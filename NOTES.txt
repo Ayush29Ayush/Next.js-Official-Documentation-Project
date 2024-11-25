@@ -525,3 +525,34 @@ Call revalidatePath to refresh the invoices page after deletion.
 This section of the Next.js tutorial offers a comprehensive guide to utilizing Server Actions for efficient and secure data mutations in Next.js applications. Remember to refer to the original sources for specific code examples and implementation details.
 
 -----------------------------------------------------------------------------------------------
+
+#? Chapter 13: handling Errors
+
+This section explains how to handle errors gracefully in Next.js applications.
+
+Error Handling with try...catch and error.tsx
+First, add a try...catch block to Server Actions to handle errors gracefully. 
+The redirect function should be called outside the try...catch block because it throws an error that could be caught by the catch block. 
+To simulate an error, you can throw an error at the beginning of a Server Action, like the deleteInvoice action. 
+The error.tsx file is a UI boundary for a route segment that catches unexpected errors and displays a fallback UI to users. It's a catch-all for errors. 
+Create an error.tsx file in the /dashboard/invoices folder. 
+The error.tsx file needs to be a Client Component and should use the "use client" directive. 
+It takes two props: error (an instance of the JavaScript Error object) and reset (a function to reset the error boundary and re-render the route segment). 
+Handling 404 Errors with the notFound Function
+The notFound function is used to handle cases where you try to fetch a resource that doesn't exist, providing a more specific error handling mechanism than error.tsx. 
+You can use a fake UUID that doesn't exist in your database to test 404 errors. 
+In this case, error.tsx will be invoked because it's defined in the parent route. 
+To handle 404 errors specifically, you can use the notFound function. 
+Confirm that the resource is not found by checking the returned value in the fetchInvoiceById function. 
+Import { notFound } from 'next/navigation' in the relevant page component. 
+Use a conditional statement to invoke notFound if the invoice doesn't exist. 
+Create a not-found.tsx file inside the /edit folder to display a 404 error UI. 
+The notFound function takes precedence over error.tsx for specific error handling. 
+
+-----------------------------------------------------------------------------------------------
+
+#? Chapter 14: Improving Asccessibility
+
+* Adding Accessibility to Your Next.js Application, refer documentation
+
+----------------------------------------------------------------------------------------------
